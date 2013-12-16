@@ -1,4 +1,4 @@
 hubiquitus-channel
 ==================
 
-Hubiquitus channels
+Hubiquitus channel
