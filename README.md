@@ -1,0 +1,4 @@
+hubiquitus-channel
+==================
+
+Hubiquitus channels
