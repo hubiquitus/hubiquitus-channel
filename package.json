@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "lodash": "2.2.*",
-    "hubiquitus-core": "0.8.0-rc2"
+    "hubiquitus-core": "0.8.*"
   },
   "devDependencies": {
     "jshint": "2.3.*",
