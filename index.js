@@ -57,7 +57,9 @@ function Channel(id, channelImpl) {
   var subscribers = channelImpl.subscribers;
   var onSubscribe = channelImpl.onSubscribe;
   var onUnsubscribe = channelImpl.onUnsubscribe;
-  hubiquitus.on('actor removed', onUnsubscribe);
+  hubiquitus.monitoring.on('cache actor removed', function (aid) {
+    onUnsubscribe(aid);
+  });
 
   /* channel actors management */
 
@@ -74,17 +76,13 @@ function Channel(id, channelImpl) {
   }
 
   function subscribe(req) {
-    var mode = 'full';
-    if (req.content && req.content.mode) mode = req.content.mode;
-    onSubscribe(req.from, mode, function (err) {
+    onSubscribe(req.from, function (err) {
       req.reply(err);
     });
   }
 
   function unsubscribe(req) {
-    var mode = 'full';
-    if (req.content && req.content.mode) mode = req.content.mode;
-    onUnsubscribe(req.from, mode, function (err) {
+    onUnsubscribe(req.from, function (err) {
       req.reply(err);
     });
   }
@@ -97,32 +95,22 @@ util.inherits(Channel, EventEmitter);
 function createInMemoryChannel() {
   var inMemorySubscribers = [];
 
-  function subscribers() {
-    return inMemorySubscribers;
-  }
-
-  function onSubscribe(aid, mode, cb) {
-    if (mode === 'bare' && hubiquitus.utils.aid.isFull(aid)) {
-      aid = hubiquitus.utils.aid.bare(aid);
-    }
-    if (!_.contains(subscribers(), aid)) {
+  function onSubscribe(aid, cb) {
+    if (!_.contains(inMemorySubscribers, aid)) {
       inMemorySubscribers.push(aid);
     }
     cb && cb();
   }
 
-  function onUnsubscribe(aid, mode, cb) {
-    if (mode === 'bare' && hubiquitus.utils.aid.isFull(aid)) {
-      aid = hubiquitus.utils.aid.bare(aid);
-    }
-    _.remove(subscribers(), function (item) {
+  function onUnsubscribe(aid, cb) {
+    _.remove(inMemorySubscribers, function (item) {
       return aid === item;
     });
     cb && cb();
   }
 
   return {
-    subscribers: subscribers,
+    subscribers: function subscribers() { return inMemorySubscribers; },
     onSubscribe: onSubscribe,
     onUnsubscribe: onUnsubscribe
   };
