@@ -1,7 +1,7 @@
 {
   "name": "hubiquitus-channel",
   "description": "Hubiquitus channel",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "homepage": "http://www.hubiquitus.com",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "lodash": "2.2.*",
-    "hubiquitus-core": "0.8.*"
+    "hubiquitus-core": "0.9.*"
   },
   "devDependencies": {
     "jshint": "2.3.*",
